@@ -77,21 +77,23 @@ function formattedDate(dateString) {
 }
 // Section: Today In Space
 // Api: Today In Space
-fetch(
-  "https://api.nasa.gov/planetary/apod?api_key=0t49Qt7VEea9MQd9uvZHns330fZtuJLJsGC0Hfkp",
-)
-  .then((response) => {
+async function getTodayInSpaceData() {
+  try {
+    const response = await fetch(
+      "https://api.nasa.gov/planetary/apod?api_key=0t49Qt7VEea9MQd9uvZHns330fZtuJLJsGC0Hfkp",
+    );
+
     if (!response.ok) {
       throw new Error(`Server Error: ${response.status}`);
     }
-    return response.json();
-  })
-  .then((data) => {
-    if (data) {
-      displayDataToday(data);
-    }
-  })
-  .catch((error) => console.error("Error: ", error));
+
+    const data = await response.json();
+    displayDataToday(data);
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+getTodayInSpaceData();
 // Display
 function displayDataToday(data) {
   const dt = formattedDate(data.date);
@@ -117,20 +119,24 @@ function displayDataToday(data) {
 }
 // Section: Launches
 // Api: Launches
-fetch("https://lldev.thespacedevs.com/2.3.0/launches/upcoming/?limit=10")
-  .then((response) => {
+async function getLaunchesData() {
+  try {
+    const response = await fetch(
+      "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/?limit=10",
+    );
+
     if (!response.ok) {
       throw new Error(`Server Error: ${response.status}`);
     }
-    return response.json();
-  })
-  .then((data) => {
-    if (data) {
-      featuredLaunch(data.results[0]);
-      launchesGrid(data.results.slice(1));
-    }
-  })
-  .catch((error) => console.error("Error: ", error));
+
+    const data = await response.json();
+    featuredLaunch(data.results[0]);
+    launchesGrid(data.results.slice(1));
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+getLaunchesData();
 // Big Card
 function featuredLaunch(launch) {
   const featuredContainer = document.getElementById("featured-launch");
@@ -359,18 +365,24 @@ function launchesGrid(launches) {
 }
 // Section: Planet
 // Api: Planet
-fetch("https://solar-system-opendata-proxy.vercel.app/api/planets")
-  .then((response) => {
+async function getPlanetData() {
+  try {
+    const response = await fetch(
+      "https://solar-system-opendata-proxy.vercel.app/api/planets",
+    );
+
     if (!response.ok) {
       throw new Error(`Server Error: ${response.status}`);
     }
-    return response.json();
-  })
-  .then((data) => {
+
+    const data = await response.json();
     planetsGrid(data.bodies.slice(0));
     planetsTable(data.bodies.slice(0));
-  })
-  .catch((error) => console.error("Error: ", error));
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
+getPlanetData();
 // Display Row Planets
 function planetsGrid(planets) {
   const planetsGrid = document.getElementById("planets-grid");
